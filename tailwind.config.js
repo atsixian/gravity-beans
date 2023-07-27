@@ -3,7 +3,11 @@
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}', './index.html'],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        display: ['Roboto Condensed'],
+      },
+    },
   },
-  plugins: [],
+  plugins: [require('@tailwindcss/typography')],
 }
