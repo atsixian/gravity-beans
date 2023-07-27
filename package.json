@@ -16,7 +16,6 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
-    "@p5-wrapper/react": "^4.2.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"
   },

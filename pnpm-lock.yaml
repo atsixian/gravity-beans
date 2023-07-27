@@ -5,9 +5,6 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@p5-wrapper/react':
-    specifier: ^4.2.0
-    version: 4.2.0(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -1724,18 +1721,6 @@ packages:
       fastq: 1.15.0
     dev: true
 
-  /@p5-wrapper/react@4.2.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-LOTd/1W8sPiXo7/U0PwapsoOf74DQAFMibovvhrB+aImYNXbg+5xoAadnmgC28OBySeBNKXwchWhF1ctf6Pnpw==}
-    peerDependencies:
-      react: '>= 18.2.0'
-      react-dom: '>= 18.2.0'
-    dependencies:
-      microdiff: 1.3.2
-      p5: 1.7.0
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
-    dev: false
-
   /@pkgr/utils@2.4.2:
     resolution: {integrity: sha512-POgTXhjrTfbTV63DiFXav4lBHiICLKKwDeaKn9Nphwj7WH6m0hMMCaJkMyRWjgtPFyRKRVoMXXjczsTQRDEhYw==}
     engines: {node: ^12.20.0 || ^14.18.0 || >=16.0.0}
@@ -3412,10 +3397,6 @@ packages:
     engines: {node: '>= 8'}
     dev: true
 
-  /microdiff@1.3.2:
-    resolution: {integrity: sha512-pKy60S2febliZIbwdfEQKTtL5bLNxOyiRRmD400gueYl9XcHyNGxzHSlJWn9IMHwYXT0yohPYL08+bGozVk8cQ==}
-    dev: false
-
   /micromatch@4.0.5:
     resolution: {integrity: sha512-DMy+ERcEW2q8Z2Po+WNXuw3c5YaUSFjAO5GsJqfEl7UjvtIuFKO6ZrKvcItdy98dwFI2N1tg3zNIdKaQT+aNdA==}
     engines: {node: '>=8.6'}
@@ -3619,10 +3600,6 @@ packages:
     dependencies:
       aggregate-error: 3.1.0
     dev: true
-
-  /p5@1.7.0:
-    resolution: {integrity: sha512-qrbT/44Dwm63ZtOKX/mp61pw+5yj6ijYLOmRv7p6zcfjbo83Vb0gVFEvW0kTLFu7hceWCig0HONo9F1bSlqbsQ==}
-    dev: false
 
   /parent-module@1.0.1:
     resolution: {integrity: sha512-GQ2EWRpQV8/o+Aw8YqtfZZPfNRWZYkbidE9k5rpl/hC3vtHHBfGm2Ifi6qWV+coDGkrUKZAxE3Lot5kcsRlh+g==}
