@@ -1,6 +1,20 @@
 import { useCallback, useState } from 'react'
-import Sketch from 'react-p5'
+import { ReactP5Wrapper, Sketch } from '@p5-wrapper/react'
 
+const sketch: Sketch = p => {
+  p.setup = () => p.createCanvas(p.windowWidth, p.windowHeight, p.WEBGL)
+
+  p.draw = () => {
+    p.background(250)
+    p.normalMaterial()
+    p.push()
+    p.rotateZ(p.frameCount * 0.01)
+    p.rotateX(p.frameCount * 0.01)
+    p.rotateY(p.frameCount * 0.01)
+    p.plane(100)
+    p.pop()
+  }
+}
 // for iOS 13+
 interface DeviceMotionEventiOS extends DeviceMotionEvent {
   requestPermission?: () => Promise<'granted' | 'denied'>
@@ -14,18 +28,12 @@ function App() {
     setMotionEvent(event)
   }, [])
 
-  const setup = (p5, canvasParentRef: Element) => {
-    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef)
-  }
-  const draw = p5 => {
-    p5.background(240)
-    p5.ellipse(50, 50, 70, 70)
-  }
   return (
     <div className="grid h-screen place-items-center">
-      <Sketch className="absolute inset-0 -z-10" setup={setup} draw={draw} />
+      <div className="absolute inset-0 -z-10">
+        <ReactP5Wrapper sketch={sketch} />
+      </div>
       <button
-        className="text-white"
         onClick={async () => {
           if (isRunning) {
             window.removeEventListener('devicemotion', handleMotion)
@@ -50,9 +58,7 @@ function App() {
       >
         {isRunning ? 'Stop' : 'Start'}
       </button>
-      <p className="text-white">
-        {motionEvent?.accelerationIncludingGravity?.x}
-      </p>
+      <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
     </div>
   )
 }
