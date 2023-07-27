@@ -40,6 +40,9 @@ devDependencies:
   '@typescript-eslint/parser':
     specifier: ^6.1.0
     version: 6.1.0(eslint@8.45.0)(typescript@5.1.6)
+  '@vitejs/plugin-basic-ssl':
+    specifier: ^1.0.1
+    version: 1.0.1(vite@4.4.6)
   '@vitejs/plugin-react':
     specifier: ^4.0.3
     version: 4.0.3(vite@4.4.6)
@@ -1891,6 +1894,15 @@ packages:
     dependencies:
       '@typescript-eslint/types': 6.1.0
       eslint-visitor-keys: 3.4.1
+    dev: true
+
+  /@vitejs/plugin-basic-ssl@1.0.1(vite@4.4.6):
+    resolution: {integrity: sha512-pcub+YbFtFhaGRTo1832FQHQSHvMrlb43974e2eS8EKleR3p1cDdkJFPci1UhwkEf1J9Bz+wKBSzqpKp7nNj2A==}
+    engines: {node: '>=14.6.0'}
+    peerDependencies:
+      vite: ^3.0.0 || ^4.0.0
+    dependencies:
+      vite: 4.4.6(@types/node@20.4.2)
     dev: true
 
   /@vitejs/plugin-react@4.0.3(vite@4.4.6):
