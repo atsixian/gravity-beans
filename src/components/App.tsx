@@ -1,4 +1,5 @@
 import { useCallback, useState } from 'react'
+import Sketch from 'react-p5'
 
 // for iOS 13+
 interface DeviceMotionEventiOS extends DeviceMotionEvent {
@@ -13,9 +14,18 @@ function App() {
     setMotionEvent(event)
   }, [])
 
+  const setup = (p5, canvasParentRef: Element) => {
+    p5.createCanvas(p5.windowWidth, p5.windowHeight).parent(canvasParentRef)
+  }
+  const draw = p5 => {
+    p5.background(240)
+    p5.ellipse(50, 50, 70, 70)
+  }
   return (
-    <div className="grid h-screen w-screen place-items-center">
+    <div className="grid h-screen place-items-center">
+      <Sketch className="absolute inset-0 -z-10" setup={setup} draw={draw} />
       <button
+        className="text-white"
         onClick={async () => {
           if (isRunning) {
             window.removeEventListener('devicemotion', handleMotion)
@@ -40,7 +50,9 @@ function App() {
       >
         {isRunning ? 'Stop' : 'Start'}
       </button>
-      <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
+      <p className="text-white">
+        {motionEvent?.accelerationIncludingGravity?.x}
+      </p>
     </div>
   )
 }
