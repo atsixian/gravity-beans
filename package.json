@@ -18,7 +18,8 @@
   "dependencies": {
     "framer-motion": "^10.13.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "react-howler": "^5.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
@@ -29,6 +30,7 @@
     "@types/node": "^20.4.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",
+    "@types/react-howler": "^5.2.0",
     "@typescript-eslint/eslint-plugin": "^6.1.0",
     "@typescript-eslint/parser": "^6.1.0",
     "@vitejs/plugin-basic-ssl": "^1.0.1",
