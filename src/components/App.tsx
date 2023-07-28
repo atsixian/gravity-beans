@@ -25,8 +25,8 @@ function App() {
 
   const sliderWidth = useTransform(volume, [0, 1], [0, 100])
   const sliderHeight = useTransform(volume, [0, 0.1], [60, 100])
-
-  const blurRadius = useTransform(volume, [0, 1], [25, 0])
+  const gradientRadius = useTransform(volume, [0, 1], [20, 100])
+  const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
   useMotionValueEvent(volume, 'change', latest => {
     latest
@@ -42,24 +42,15 @@ function App() {
 
   return (
     <div>
-      <svg height="0">
-        <defs>
-          <filter
-            id="blurFilter"
-            filterUnits="userSpaceOnUse"
-            colorInterpolationFilters="sRGB"
-          >
-            <motion.feGaussianBlur
-              stdDeviation={blurRadius}
-              edgeMode="duplicate"
-            />
-            <feComponentTransfer>
-              <feFuncA type="discrete" tableValues="1 1" />
-            </feComponentTransfer>
-          </filter>
-        </defs>
-      </svg>
-      <div className="flex h-screen items-center justify-center text-white before:absolute before:inset-0 before:-z-10 before:h-full before:w-full before:bg-[url('/bg.jpg')] before:bg-cover before:content-[''] before:[filter:url(#blurFilter)]">
+      <div className="flex h-screen items-center justify-center text-white before:absolute before:inset-0 before:-z-10 before:h-full before:w-full before:bg-[url('/bg.jpg')] before:bg-cover before:content-['']">
+        <motion.div
+          className="pointer-events-none absolute inset-0 -z-10 h-full w-full touch-none"
+          style={{
+            background: useMotionTemplate`
+            radial-gradient(circle at center, hsla(0, 0%, 0%, ${gradientOpacity}) ${gradientRadius}%, black)
+            `,
+          }}
+        ></motion.div>
         <div>
           <div className="relative flex h-11 w-80 items-center justify-start overflow-hidden rounded-full bg-stone-400 p-1">
             <motion.div
@@ -75,6 +66,7 @@ function App() {
             src="/coffee-bean-sound.mp3"
             playing={isPlaying}
             loop
+            volume={1}
             ref={howlerRef}
           />
 
