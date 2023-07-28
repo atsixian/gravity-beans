@@ -1,6 +1,6 @@
 {
-  "name": "gravity-volume-slider",
-  "description": "A weird volume slider controlled by gravity",
+  "name": "gravity-beans",
+  "description": "Tilt your phone and pour some coffee beans",
   "version": "0.1.0",
   "private": true,
   "author": {

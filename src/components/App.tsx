@@ -128,7 +128,7 @@ function App() {
         </div>
 
         <div className="prose prose-invert absolute bottom-10 text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
-          <h1 className="mb-3 text-2xl md:text-3xl">Gravity Volume Slider</h1>
+          <h1 className="mb-3 text-2xl md:text-3xl">Gravity Beans</h1>
           <p>
             Made by <a href="https://twitter.com/noworkforsixian">Sixian</a>
           </p>
