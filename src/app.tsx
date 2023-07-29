@@ -51,7 +51,7 @@ function App() {
 
   useMotionValueEvent(volume, 'change', latest => {
     if (sounds.isPlaying) {
-      sounds.play(latest < 0.5 ? 'slow' : latest > 0.8 ? 'fast' : 'mid')
+      sounds.play(latest < 0.4 ? 'slow' : latest > 0.6 ? 'fast' : 'mid')
       sounds.volume(latest)
     }
   })
