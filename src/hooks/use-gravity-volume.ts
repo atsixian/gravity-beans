@@ -7,11 +7,11 @@ type UseGravityVolume = {
   resetVelocity(): void
 }
 
-export function useGravityVolume(t: UseStoppableTime): UseGravityVolume {
+export function useGravityVolume(t: UseStoppableTime, initialVolume: number): UseGravityVolume {
   const v = useMotionValue(0)
   const g = useMotionValue(0)
 
-  const volume = useMotionValue(1)
+  const volume = useMotionValue(initialVolume)
 
   useMotionValueEvent(t.val, 'change', () => {
     const dt = 1 / 500

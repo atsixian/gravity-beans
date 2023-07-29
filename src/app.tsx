@@ -18,25 +18,28 @@ import { IconVolumeDown, IconVolumeUp } from 'icon-volume'
 import { useEffect, useRef, useState } from 'react'
 
 function App() {
-  const [motionEvent, setMotionEvent] = useState<DeviceMotionEvent>()
+  const initialVolume = 0.5
 
   const sounds = useSoundSwitcher({
     slow: {
       src: '/coffee-bean-slow.mp3',
       loop: true,
+      volume: initialVolume,
     },
     mid: {
       src: '/coffee-bean-mid.mp3',
       loop: true,
+      volume: initialVolume,
     },
     fast: {
       src: '/coffee-bean-fast.mp3',
       loop: true,
+      volume: initialVolume,
     },
   })
 
   const t = useStoppableTime()
-  const gravityVolume = useGravityVolume(t)
+  const gravityVolume = useGravityVolume(t, initialVolume)
   const volume = gravityVolume.volume
 
   const sliderWidth = useTransform(volume, [0, 1], [0, 100])
@@ -58,8 +61,7 @@ function App() {
   const handleMotionChange: UseDeviceMotionParams['onChange'] = event => {
     isMotionSupported.current = true
     if (event.accelerationIncludingGravity?.x) {
-      setMotionEvent(event)
-      gravityVolume.setGravity(event.accelerationIncludingGravity.x / 2)
+      gravityVolume.setGravity(event.accelerationIncludingGravity.x)
     }
   }
 
@@ -96,7 +98,7 @@ function App() {
           }}
         ></motion.div>
 
-        <motion.div layout className="mt-auto flex flex-col items-center gap-2">
+        <div className="mt-auto flex flex-col items-center gap-2">
           <motion.button
             layout
             className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
@@ -134,14 +136,13 @@ function App() {
               }, 100)
             }}
           >
-            <IconPhoneRotate />
             <motion.span
-              key={sounds.isPlaying ? 'Pause' : 'Play sound'}
+              key={sounds.isPlaying ? 'Pause' : 'Play'}
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 30, opacity: 0 }}
             >
-              {sounds.isPlaying ? 'Pause' : 'Play sound'}
+              {sounds.isPlaying ? 'Pause' : 'Play'}
             </motion.span>
           </motion.button>
 
@@ -155,10 +156,18 @@ function App() {
             ></motion.div>
           </div>
 
-          <p className="flex items-center gap-1 text-sm">
-            <IconHearing className="h-4 w-4" />
-            Unmute for a surprise
-          </p>
+          {(status === 'granted' || status === 'nodevice') && (
+            <p className="flex items-center gap-1 text-sm">
+              <IconHearing className="h-5 w-5" />
+              Unmute for a surprise
+            </p>
+          )}
+          {status === 'granted' && (
+            <p className="flex items-center gap-1 text-sm">
+              <IconPhoneRotate className="h-5 w-5" />
+              Tilt your phone to pour some coffee beans
+            </p>
+          )}
 
           {status === 'nodevice' && (
             <div>
@@ -188,9 +197,7 @@ function App() {
               </p>
             </div>
           )}
-
-          <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
-        </motion.div>
+        </div>
 
         <div className="prose prose-invert mb-4 mt-auto text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
           <h1 className="mb-3 text-2xl md:text-3xl">Gravity Beans</h1>
