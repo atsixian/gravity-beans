@@ -165,7 +165,7 @@ function App() {
           {status === 'granted' && (
             <p className="flex items-center gap-1 text-sm">
               <IconPhoneRotate className="h-5 w-5" />
-              Tilt your phone to pour some coffee beans
+              Tilt to pour some coffee beans
             </p>
           )}
 
