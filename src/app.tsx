@@ -6,7 +6,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import { useSoundSwitcher } from 'hooks/useSound'
+import { useSoundSwitcher } from 'hooks/use-sound'
 import { useCallback, useState } from 'react'
 
 // for iOS 13+
