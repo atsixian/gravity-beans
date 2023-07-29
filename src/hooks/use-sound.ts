@@ -22,7 +22,8 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
         howls.current[soundName] = new Howl(options)
       }
     )
-  }, [sounds])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   const play = (soundName?: SoundName) => {
     if (!soundName) {
@@ -33,8 +34,9 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
     if (
       currentSound.current === howls.current[soundName] &&
       currentSound.current.playing()
-    )
+    ) {
       return
+    }
 
     currentSound.current?.stop()
     howls.current[soundName].play()

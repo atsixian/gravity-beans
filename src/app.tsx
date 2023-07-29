@@ -2,7 +2,7 @@ import {
   motion,
   useMotionTemplate,
   useMotionValueEvent,
-  useTransform,
+  useTransform
 } from 'framer-motion'
 import { useGravityVolume } from 'hooks/use-gravity-volume'
 import { useSoundSwitcher } from 'hooks/use-sound'
@@ -45,7 +45,7 @@ function App() {
 
   useMotionValueEvent(volume, 'change', latest => {
     if (sounds.isPlaying) {
-      sounds.play(latest < 0.3 ? 'slow' : latest > 0.7 ? 'fast' : 'mid')
+      sounds.play(latest < 0.3 ? 'slow' : latest > 0.6 ? 'fast' : 'mid')
       sounds.volume(latest)
     }
   })
@@ -54,8 +54,9 @@ function App() {
     if (event.accelerationIncludingGravity?.x) {
       setMotionEvent(event)
       t.start()
-      gravityVolume.setGravity(event.accelerationIncludingGravity.x)
+      gravityVolume.setGravity(event.accelerationIncludingGravity.x / 2)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (
