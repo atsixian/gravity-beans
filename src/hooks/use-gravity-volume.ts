@@ -14,7 +14,7 @@ export function useGravityVolume(t: UseStoppableTime, initialVolume: number): Us
   const volume = useMotionValue(initialVolume)
 
   useMotionValueEvent(t.val, 'change', () => {
-    const dt = 1 / 500
+    const dt = 1 / 150
     const oldV = v.get()
     const newV = oldV + g.get() * dt
     const vol = volume.get() + ((oldV + newV) / 2) * dt
