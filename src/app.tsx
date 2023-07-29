@@ -2,7 +2,7 @@ import {
   motion,
   useMotionTemplate,
   useMotionValueEvent,
-  useTransform
+  useTransform,
 } from 'framer-motion'
 import { useGravityVolume } from 'hooks/use-gravity-volume'
 import { useSoundSwitcher } from 'hooks/use-sound'
@@ -53,7 +53,6 @@ function App() {
   const handleGravityChange = useCallback((event: DeviceMotionEvent) => {
     if (event.accelerationIncludingGravity?.x) {
       setMotionEvent(event)
-      t.start()
       gravityVolume.setGravity(event.accelerationIncludingGravity.x / 2)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

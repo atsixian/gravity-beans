@@ -25,7 +25,6 @@ export function useGravityVolume(t: UseStoppableTime): UseGravityVolume {
   useMotionValueEvent(volume, 'change', vol => {
     // reset time and velocity when volume animation ends
     if (vol <= 0 || vol >= 1) {
-      t.stop()
       resetVelocity()
     }
   })
