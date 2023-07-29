@@ -4,19 +4,20 @@ import { UseStoppableTime } from './use-stoppable-time'
 type UseGravityVolume = {
   volume: MotionValue<number>
   setGravity(val: number): void
+  resetVelocity(): void
 }
 
 export function useGravityVolume(t: UseStoppableTime): UseGravityVolume {
   const v = useMotionValue(0)
   const g = useMotionValue(0)
 
-  const volume = useMotionValue(0)
+  const volume = useMotionValue(1)
 
-  useMotionValueEvent(t.val, 'change', t => {
-    const _t = t / 1000_000 // slow down
+  useMotionValueEvent(t.val, 'change', () => {
+    const dt = 1 / 500
     const oldV = v.get()
-    const newV = v.get() + g.get() * _t
-    const vol = volume.get() + ((oldV + newV) / 2) * _t
+    const newV = oldV + g.get() * dt
+    const vol = volume.get() + ((oldV + newV) / 2) * dt
     v.set(newV)
     volume.set(Math.max(0, Math.min(1, vol)))
   })
@@ -25,8 +26,7 @@ export function useGravityVolume(t: UseStoppableTime): UseGravityVolume {
     // reset time and velocity when volume animation ends
     if (vol <= 0 || vol >= 1) {
       t.stop()
-      t.reset()
-      v.set(0)
+      resetVelocity()
     }
   })
 
@@ -34,8 +34,13 @@ export function useGravityVolume(t: UseStoppableTime): UseGravityVolume {
     g.set(val)
   }
 
+  const resetVelocity = () => {
+    v.set(0)
+  }
+
   return {
     volume,
     setGravity,
+    resetVelocity,
   }
 }

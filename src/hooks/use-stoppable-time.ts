@@ -1,8 +1,4 @@
-import {
-  useAnimationFrame,
-  MotionValue,
-  useMotionValue,
-} from 'framer-motion'
+import { useAnimationFrame, MotionValue, useMotionValue } from 'framer-motion'
 import { useState } from 'react'
 
 export type UseStoppableTime = {
@@ -10,6 +6,7 @@ export type UseStoppableTime = {
   stop(): void
   start(): void
   val: MotionValue<number>
+  isRunning: boolean
 }
 
 export function useStoppableTime(): UseStoppableTime {
@@ -38,5 +35,6 @@ export function useStoppableTime(): UseStoppableTime {
     stop,
     start,
     val: t,
+    isRunning,
   }
 }

@@ -1,7 +1,8 @@
 import {
   motion,
   useMotionTemplate,
-  useMotionValueEvent, useTransform
+  useMotionValueEvent,
+  useTransform,
 } from 'framer-motion'
 import { useGravityVolume } from 'hooks/use-gravity-volume'
 import { useSoundSwitcher } from 'hooks/use-sound'
@@ -17,7 +18,6 @@ interface DeviceMotionEventiOS extends DeviceMotionEvent {
 
 function App() {
   const [motionEvent, setMotionEvent] = useState<DeviceMotionEvent>()
-  const [isRunning, setIsRunning] = useState(false)
 
   const sounds = useSoundSwitcher({
     slow: {
@@ -51,9 +51,10 @@ function App() {
   })
 
   const handleGravityChange = useCallback((event: DeviceMotionEvent) => {
-    setMotionEvent(event)
     if (event.accelerationIncludingGravity?.x) {
-      // g.set(event.accelerationIncludingGravity.x)
+      setMotionEvent(event)
+      t.start()
+      gravityVolume.setGravity(event.accelerationIncludingGravity.x)
     }
   }, [])
 
@@ -107,7 +108,7 @@ function App() {
               className="border p-3"
               onClick={() => {
                 t.start()
-                gravityVolume.setGravity(10)
+                gravityVolume.setGravity(1)
               }}
             >
               +
@@ -116,7 +117,7 @@ function App() {
               className="border p-3"
               onClick={() => {
                 t.start()
-                gravityVolume.setGravity(-10)
+                gravityVolume.setGravity(-1)
               }}
             >
               -
@@ -129,9 +130,10 @@ function App() {
 
           <button
             onClick={async () => {
-              if (isRunning) {
+              if (t.isRunning) {
                 window.removeEventListener('devicemotion', handleGravityChange)
-                setIsRunning(false)
+                t.stop()
+                gravityVolume.resetVelocity()
                 return
               }
 
@@ -141,16 +143,16 @@ function App() {
               if (typeof requestPermission === 'function') {
                 const result = await requestPermission()
                 if (result === 'granted') {
-                  setIsRunning(true)
+                  t.start()
                   window.addEventListener('devicemotion', handleGravityChange)
                 }
               } else {
-                setIsRunning(true)
+                t.start()
                 window.addEventListener('devicemotion', handleGravityChange)
               }
             }}
           >
-            {isRunning ? 'Stop' : 'Start'}
+            {t.isRunning ? 'Stop' : 'Start'}
           </button>
           <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
         </div>
