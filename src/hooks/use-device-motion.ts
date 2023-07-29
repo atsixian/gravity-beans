@@ -4,8 +4,6 @@ import { useCallback } from 'react'
 export type MotionPermissionStatus =
   | 'granted'
   | 'denied'
-  | 'unknown'
-  | 'nodevice'
 
 export interface DeviceMotionEventiOS extends DeviceMotionEvent {
   requestPermission?: () => Promise<MotionPermissionStatus>

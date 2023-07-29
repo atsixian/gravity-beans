@@ -15,7 +15,7 @@ import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
 import { IconVolumeDown, IconVolumeUp } from 'icon-volume'
-import { useEffect, useRef, useState } from 'react'
+import { useState } from 'react'
 
 function App() {
   const initialVolume = 0.5
@@ -47,7 +47,12 @@ function App() {
   const gradientRadius = useTransform(volume, [0, 1], [20, 100])
   const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
-  const [status, setStatus] = useState<MotionPermissionStatus>('unknown')
+  const [status, setStatus] = useState<MotionPermissionStatus | null>(null)
+
+  const isMobile =
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
 
   useMotionValueEvent(volume, 'change', latest => {
     if (sounds.isPlaying) {
@@ -56,10 +61,7 @@ function App() {
     }
   })
 
-  const isMotionSupported = useRef(false)
-
   const handleMotionChange: UseDeviceMotionParams['onChange'] = event => {
-    isMotionSupported.current = true
     if (event.accelerationIncludingGravity?.x) {
       gravityVolume.setGravity(event.accelerationIncludingGravity.x)
     }
@@ -70,13 +72,6 @@ function App() {
     t.start()
     sounds.play(!sounds.current() ? 'fast' : undefined)
   }
-
-  useEffect(() => {
-    if (status === 'granted') {
-      handleMotionStart()
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [status])
 
   const {
     startUpdatingDeviceMotion,
@@ -103,37 +98,21 @@ function App() {
             layout
             className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
             onClick={async () => {
-              if (status !== 'unknown') {
-                if (sounds.isPlaying) {
-                  t.stop()
-                  sounds.pause()
-                  gravityVolume.resetVelocity()
-                  stopUpdatingDeviceMotion()
-                } else {
+              if (sounds.isPlaying) {
+                t.stop()
+                sounds.pause()
+                gravityVolume.resetVelocity()
+                stopUpdatingDeviceMotion()
+              } else if (!sounds.current()) {
+                // first time
+                const res = await requestPermission()
+                setStatus(res)
+                if (res === 'granted') {
                   handleMotionStart()
                 }
-                return
+              } else {
+                handleMotionStart()
               }
-
-              // first time
-              const res = await requestPermission()
-
-              if (res === 'denied') {
-                setStatus('denied')
-                return
-              }
-
-              handleMotionStart()
-
-              // a hacky way to check if the device has the required hardware
-              // we only know if it's available once the change handler is called
-              setTimeout(() => {
-                if (res === 'granted' && !isMotionSupported.current) {
-                  setStatus('nodevice')
-                } else {
-                  setStatus('granted')
-                }
-              }, 100)
             }}
           >
             <motion.span
@@ -156,20 +135,20 @@ function App() {
             ></motion.div>
           </div>
 
-          {(status === 'granted' || status === 'nodevice') && (
+          {status === 'granted' && (
             <p className="flex items-center gap-1 text-sm">
               <IconHearing className="h-5 w-5" />
               Unmute for a surprise
             </p>
           )}
-          {status === 'granted' && (
+          {isMobile && status === 'granted' && (
             <p className="flex items-center gap-1 text-sm">
               <IconPhoneRotate className="h-5 w-5" />
               Tilt to pour some coffee beans
             </p>
           )}
 
-          {status === 'nodevice' && (
+          {!isMobile && (
             <div>
               <div className="mt-4 flex items-center justify-center">
                 <button
