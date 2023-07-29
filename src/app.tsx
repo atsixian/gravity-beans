@@ -1,12 +1,11 @@
-import type { MotionValue } from 'framer-motion'
 import {
   motion,
   useMotionTemplate,
-  useMotionValueEvent,
-  useSpring,
-  useTransform,
+  useMotionValueEvent, useTransform
 } from 'framer-motion'
+import { useGravityVolume } from 'hooks/use-gravity-volume'
 import { useSoundSwitcher } from 'hooks/use-sound'
+import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
 import { useCallback, useState } from 'react'
@@ -35,10 +34,9 @@ function App() {
     },
   })
 
-  const volume: MotionValue<number> = useSpring(1, {
-    bounce: 0,
-    duration: 8000,
-  })
+  const t = useStoppableTime()
+  const gravityVolume = useGravityVolume(t)
+  const volume = gravityVolume.volume
 
   const sliderWidth = useTransform(volume, [0, 1], [0, 100])
   const sliderHeight = useTransform(volume, [0, 0.1], [60, 100])
@@ -46,12 +44,17 @@ function App() {
   const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
   useMotionValueEvent(volume, 'change', latest => {
-    sounds.play(latest < 0.3 ? 'slow' : latest > 0.7 ? 'fast' : 'mid')
-    sounds.volume(latest)
+    if (sounds.isPlaying) {
+      sounds.play(latest < 0.3 ? 'slow' : latest > 0.7 ? 'fast' : 'mid')
+      sounds.volume(latest)
+    }
   })
 
-  const handleMotion = useCallback((event: DeviceMotionEvent) => {
+  const handleGravityChange = useCallback((event: DeviceMotionEvent) => {
     setMotionEvent(event)
+    if (event.accelerationIncludingGravity?.x) {
+      // g.set(event.accelerationIncludingGravity.x)
+    }
   }, [])
 
   return (
@@ -103,7 +106,8 @@ function App() {
             <button
               className="border p-3"
               onClick={() => {
-                volume.set(1)
+                t.start()
+                gravityVolume.setGravity(10)
               }}
             >
               +
@@ -111,7 +115,8 @@ function App() {
             <button
               className="border p-3"
               onClick={() => {
-                volume.set(0)
+                t.start()
+                gravityVolume.setGravity(-10)
               }}
             >
               -
@@ -123,10 +128,9 @@ function App() {
           </p>
 
           <button
-            className="hidden"
             onClick={async () => {
               if (isRunning) {
-                window.removeEventListener('devicemotion', handleMotion)
+                window.removeEventListener('devicemotion', handleGravityChange)
                 setIsRunning(false)
                 return
               }
@@ -138,11 +142,11 @@ function App() {
                 const result = await requestPermission()
                 if (result === 'granted') {
                   setIsRunning(true)
-                  window.addEventListener('devicemotion', handleMotion)
+                  window.addEventListener('devicemotion', handleGravityChange)
                 }
               } else {
                 setIsRunning(true)
-                window.addEventListener('devicemotion', handleMotion)
+                window.addEventListener('devicemotion', handleGravityChange)
               }
             }}
           >
