@@ -7,6 +7,8 @@ import {
   useTransform,
 } from 'framer-motion'
 import { useSoundSwitcher } from 'hooks/use-sound'
+import IconHearing from 'icon-hearing'
+import IconPhoneRotate from 'icon-phone-rotate'
 import { useCallback, useState } from 'react'
 
 // for iOS 13+
@@ -54,7 +56,7 @@ function App() {
 
   return (
     <div>
-      <div className="flex h-screen items-center justify-center text-white before:absolute before:inset-0 before:-z-10 before:h-full before:w-full before:bg-[url('/bg.jpg')] before:bg-cover before:content-['']">
+      <div className="flex h-screen flex-col items-center justify-center text-white before:absolute before:inset-0 before:-z-10 before:h-full before:w-full before:bg-[url('/bg.jpg')] before:bg-cover before:content-['']">
         <motion.div
           className="pointer-events-none absolute inset-0 -z-10 h-full w-full touch-none"
           style={{
@@ -63,7 +65,30 @@ function App() {
             `,
           }}
         ></motion.div>
-        <div>
+
+        <div className="mt-auto flex flex-col items-center gap-2">
+          <motion.button
+            layout
+            className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
+            onClick={() => {
+              if (sounds.isPlaying) {
+                sounds.pause()
+              } else {
+                sounds.play('fast')
+              }
+            }}
+          >
+            <IconPhoneRotate />
+            <motion.span
+              key={sounds.isPlaying ? 'Pause' : 'Play'}
+              initial={{ y: -30, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 30, opacity: 0 }}
+            >
+              {sounds.isPlaying ? 'Pause' : 'Play'}
+            </motion.span>
+          </motion.button>
+
           <div className="relative flex h-11 w-80 items-center justify-start overflow-hidden rounded-full bg-stone-400 p-1">
             <motion.div
               className="h-full w-full overflow-hidden rounded-full bg-stone-800"
@@ -75,17 +100,6 @@ function App() {
           </div>
 
           <div className="mt-4 flex items-center justify-center">
-            <button
-              onClick={() => {
-                if (sounds.isPlaying()) {
-                  sounds.pause()
-                } else {
-                  sounds.play('fast')
-                }
-              }}
-            >
-              Play
-            </button>
             <button
               className="border p-3"
               onClick={() => {
@@ -103,6 +117,10 @@ function App() {
               -
             </button>
           </div>
+          <p className="flex items-center gap-1 text-sm">
+            <IconHearing className="h-4 w-4" />
+            Unmute your phone for a surprise
+          </p>
 
           <button
             className="hidden"
@@ -133,7 +151,7 @@ function App() {
           <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
         </div>
 
-        <div className="prose prose-invert absolute bottom-10 text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
+        <div className="prose prose-invert mb-4 mt-auto text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
           <h1 className="mb-3 text-2xl md:text-3xl">Gravity Beans</h1>
           <p>
             Made by <a href="https://twitter.com/noworkforsixian">Sixian</a>

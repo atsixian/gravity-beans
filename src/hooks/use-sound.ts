@@ -1,5 +1,5 @@
 import { Howl, HowlOptions } from 'howler'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Howls<T extends Record<string, HowlOptions>> = Record<keyof T, Howl>
 
@@ -7,11 +7,14 @@ type Howls<T extends Record<string, HowlOptions>> = Record<keyof T, Howl>
  * Multiple sound sources, but only plays one sound at a time,
  * like switching songs in your music player
  */
-export function useSoundSwitcher<T extends Record<string, HowlOptions>>(sounds: T) {
+export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
+  sounds: T
+) {
   type SoundName = keyof T
 
   const currentSound = useRef<Howl | null>(null)
   const howls = useRef<Howls<T>>({} as Howls<T>)
+  const [isPlaying, setIsPlaying] = useState(false)
 
   useEffect(() => {
     Object.entries(sounds).forEach(
@@ -36,6 +39,7 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(sounds: 
     currentSound.current?.stop()
     howls.current[soundName].play()
     currentSound.current = howls.current[soundName]
+    setIsPlaying(true)
   }
 
   /**
@@ -43,6 +47,7 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(sounds: 
    */
   const pause = () => {
     currentSound.current?.pause()
+    setIsPlaying(false)
   }
 
   const get = (soundName: SoundName) => {
@@ -55,12 +60,6 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(sounds: 
 
   const current = () => {
     return currentSound.current
-  }
-
-  const isPlaying = () => {
-    if (!currentSound.current) return false
-
-    return currentSound.current?.playing()
   }
 
   return { play, pause, get, current, volume, isPlaying }
