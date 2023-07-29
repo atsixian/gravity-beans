@@ -28,6 +28,7 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
   const play = (soundName?: SoundName) => {
     if (!soundName) {
       currentSound.current?.play()
+      setIsPlaying(true)
       return
     }
 
@@ -44,12 +45,13 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
     setIsPlaying(true)
   }
 
-  /**
-   * Pauses the current sound.
-   */
   const pause = () => {
     currentSound.current?.pause()
     setIsPlaying(false)
+  }
+
+  const stop = () => {
+    currentSound.current?.stop()
   }
 
   const get = (soundName: SoundName) => {
@@ -64,5 +66,5 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
     return currentSound.current
   }
 
-  return { play, pause, get, current, volume, isPlaying }
+  return { play, pause, stop, get, current, volume, isPlaying }
 }

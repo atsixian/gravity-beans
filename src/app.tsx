@@ -4,17 +4,17 @@ import {
   useMotionValueEvent,
   useTransform,
 } from 'framer-motion'
+import {
+  MotionPermissionStatus,
+  useDeviceMotion,
+  UseDeviceMotionParams,
+} from 'hooks/use-device-motion'
 import { useGravityVolume } from 'hooks/use-gravity-volume'
-import { useSoundSwitcher } from 'hooks/use-sound'
+import { useSoundSwitcher } from 'hooks/use-sound-switcher'
 import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
-import { useCallback, useState } from 'react'
-
-// for iOS 13+
-interface DeviceMotionEventiOS extends DeviceMotionEvent {
-  requestPermission?: () => Promise<'granted' | 'denied'>
-}
+import { useEffect, useRef, useState } from 'react'
 
 function App() {
   const [motionEvent, setMotionEvent] = useState<DeviceMotionEvent>()
@@ -43,20 +43,45 @@ function App() {
   const gradientRadius = useTransform(volume, [0, 1], [20, 100])
   const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
+  const [status, setStatus] = useState<MotionPermissionStatus>('unknown')
+
   useMotionValueEvent(volume, 'change', latest => {
     if (sounds.isPlaying) {
-      sounds.play(latest < 0.3 ? 'slow' : latest > 0.6 ? 'fast' : 'mid')
+      sounds.play(latest < 0.5 ? 'slow' : latest > 0.8 ? 'fast' : 'mid')
       sounds.volume(latest)
     }
   })
 
-  const handleGravityChange = useCallback((event: DeviceMotionEvent) => {
+  const isMotionSupported = useRef(false)
+
+  const handleMotionChange: UseDeviceMotionParams['onChange'] = event => {
+    isMotionSupported.current = true
     if (event.accelerationIncludingGravity?.x) {
       setMotionEvent(event)
       gravityVolume.setGravity(event.accelerationIncludingGravity.x / 2)
     }
+  }
+
+  const handleMotionStart = () => {
+    startUpdatingDeviceMotion()
+    t.start()
+    sounds.play(!sounds.current() ? 'fast' : undefined)
+  }
+
+  useEffect(() => {
+    if (status === 'granted') {
+      handleMotionStart()
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [status])
+
+  const {
+    startUpdatingDeviceMotion,
+    stopUpdatingDeviceMotion,
+    requestPermission,
+  } = useDeviceMotion({
+    onChange: handleMotionChange,
+  })
 
   return (
     <div>
@@ -74,12 +99,37 @@ function App() {
           <motion.button
             layout
             className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
-            onClick={() => {
-              if (sounds.isPlaying) {
-                sounds.pause()
-              } else {
-                sounds.play('fast')
+            onClick={async () => {
+              if (status !== 'unknown') {
+                if (sounds.isPlaying) {
+                  sounds.pause()
+                  gravityVolume.resetVelocity()
+                  stopUpdatingDeviceMotion()
+                } else {
+                  handleMotionStart()
+                }
+                return
               }
+
+              // first time
+              const res = await requestPermission()
+
+              if (res === 'denied') {
+                setStatus('denied')
+                return
+              }
+
+              handleMotionStart()
+
+              // a hacky way to check if the device has the required hardware
+              // we only know if it's available once the change handler is called
+              setTimeout(() => {
+                if (res === 'granted' && !isMotionSupported.current) {
+                  setStatus('nodevice')
+                } else {
+                  setStatus('granted')
+                }
+              }, 100)
             }}
           >
             <IconPhoneRotate />
@@ -125,35 +175,9 @@ function App() {
           </div>
           <p className="flex items-center gap-1 text-sm">
             <IconHearing className="h-4 w-4" />
-            Unmute your phone for a surprise
+            Unmute for a surprise
           </p>
 
-          <button
-            onClick={async () => {
-              if (t.isRunning) {
-                window.removeEventListener('devicemotion', handleGravityChange)
-                t.stop()
-                gravityVolume.resetVelocity()
-                return
-              }
-
-              const requestPermission = (
-                DeviceMotionEvent as unknown as DeviceMotionEventiOS
-              ).requestPermission
-              if (typeof requestPermission === 'function') {
-                const result = await requestPermission()
-                if (result === 'granted') {
-                  t.start()
-                  window.addEventListener('devicemotion', handleGravityChange)
-                }
-              } else {
-                t.start()
-                window.addEventListener('devicemotion', handleGravityChange)
-              }
-            }}
-          >
-            {t.isRunning ? 'Stop' : 'Start'}
-          </button>
           <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
         </div>
 
