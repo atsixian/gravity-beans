@@ -14,6 +14,7 @@ import { useSoundSwitcher } from 'hooks/use-sound-switcher'
 import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
+import { IconVolumeDown, IconVolumeUp } from 'icon-volume'
 import { useEffect, useRef, useState } from 'react'
 
 function App() {
@@ -95,13 +96,14 @@ function App() {
           }}
         ></motion.div>
 
-        <div className="mt-auto flex flex-col items-center gap-2">
+        <motion.div layout className="mt-auto flex flex-col items-center gap-2">
           <motion.button
             layout
             className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
             onClick={async () => {
               if (status !== 'unknown') {
                 if (sounds.isPlaying) {
+                  t.stop()
                   sounds.pause()
                   gravityVolume.resetVelocity()
                   stopUpdatingDeviceMotion()
@@ -134,12 +136,12 @@ function App() {
           >
             <IconPhoneRotate />
             <motion.span
-              key={sounds.isPlaying ? 'Pause' : 'Play'}
+              key={sounds.isPlaying ? 'Pause' : 'Play sound'}
               initial={{ y: -30, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 30, opacity: 0 }}
             >
-              {sounds.isPlaying ? 'Pause' : 'Play'}
+              {sounds.isPlaying ? 'Pause' : 'Play sound'}
             </motion.span>
           </motion.button>
 
@@ -153,33 +155,42 @@ function App() {
             ></motion.div>
           </div>
 
-          <div className="mt-4 flex items-center justify-center">
-            <button
-              className="border p-3"
-              onClick={() => {
-                t.start()
-                gravityVolume.setGravity(1)
-              }}
-            >
-              +
-            </button>
-            <button
-              className="border p-3"
-              onClick={() => {
-                t.start()
-                gravityVolume.setGravity(-1)
-              }}
-            >
-              -
-            </button>
-          </div>
           <p className="flex items-center gap-1 text-sm">
             <IconHearing className="h-4 w-4" />
             Unmute for a surprise
           </p>
 
+          {status === 'nodevice' && (
+            <div>
+              <div className="mt-4 flex items-center justify-center">
+                <button
+                  className="border p-2"
+                  onClick={() => {
+                    gravityVolume.setGravity(-2)
+                  }}
+                >
+                  <IconVolumeDown className="w-6" aria-label="volume down" />
+                </button>
+                <button
+                  className="border p-2"
+                  onClick={() => {
+                    gravityVolume.setGravity(2)
+                  }}
+                >
+                  <IconVolumeUp className="w-6" aria-label="volume up" />
+                </button>
+              </div>
+              <p className="mt-2 text-center text-sm">
+                Looks like you&apos;re on a desktop. <br />
+                Try running it on a phone or tablet to see gravity in action.
+                <br />
+                But you can still play with the volume button👀
+              </p>
+            </div>
+          )}
+
           <p>{motionEvent?.accelerationIncludingGravity?.x}</p>
-        </div>
+        </motion.div>
 
         <div className="prose prose-invert mb-4 mt-auto text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
           <h1 className="mb-3 text-2xl md:text-3xl">Gravity Beans</h1>

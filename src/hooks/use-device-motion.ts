@@ -41,7 +41,6 @@ export function useDeviceMotion({
   }
 
   const startUpdatingDeviceMotion = () => {
-    window.removeEventListener('devicemotion', onChangeCb)
     window.addEventListener('devicemotion', onChangeCb)
   }
 
