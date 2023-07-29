@@ -6,7 +6,7 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import { useSound } from 'hooks/useSound'
+import { useSoundSwitcher } from 'hooks/useSound'
 import { useCallback, useState } from 'react'
 
 // for iOS 13+
@@ -18,7 +18,7 @@ function App() {
   const [motionEvent, setMotionEvent] = useState<DeviceMotionEvent>()
   const [isRunning, setIsRunning] = useState(false)
 
-  const sounds = useSound({
+  const sounds = useSoundSwitcher({
     slow: {
       src: '/coffee-bean-slow.mp3',
       loop: true,
