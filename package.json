@@ -17,9 +17,9 @@
   },
   "dependencies": {
     "framer-motion": "^10.13.2",
+    "howler": "^2.2.3",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-howler": "^5.2.0"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.22.9",
@@ -27,6 +27,7 @@
     "@babel/preset-react": "^7.22.5",
     "@babel/preset-typescript": "^7.22.5",
     "@tailwindcss/typography": "^0.5.9",
+    "@types/howler": "^2.2.7",
     "@types/node": "^20.4.2",
     "@types/react": "^18.2.15",
     "@types/react-dom": "^18.2.7",

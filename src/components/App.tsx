@@ -1,3 +1,4 @@
+import type { MotionValue } from 'framer-motion'
 import {
   motion,
   useMotionTemplate,
@@ -5,8 +6,8 @@ import {
   useSpring,
   useTransform,
 } from 'framer-motion'
-import { useCallback, useRef, useState } from 'react'
-import ReactHowler from 'react-howler'
+import { useSound } from 'hooks/useSound'
+import { useCallback, useState } from 'react'
 
 // for iOS 13+
 interface DeviceMotionEventiOS extends DeviceMotionEvent {
@@ -16,12 +17,26 @@ interface DeviceMotionEventiOS extends DeviceMotionEvent {
 function App() {
   const [motionEvent, setMotionEvent] = useState<DeviceMotionEvent>()
   const [isRunning, setIsRunning] = useState(false)
-  const [isPlaying, setIsPlaying] = useState(false)
 
-  const howlerRef = useRef<ReactHowler>(null)
+  const sounds = useSound({
+    slow: {
+      src: '/coffee-bean-slow.mp3',
+      loop: true,
+    },
+    mid: {
+      src: '/coffee-bean-mid.mp3',
+      loop: true,
+    },
+    fast: {
+      src: '/coffee-bean-fast.mp3',
+      loop: true,
+    },
+  })
 
-  const volume = useSpring(0.1, { bounce: 0, duration: 8000 })
-  const playbackRate = useTransform(volume, [0, 1], [0.5, 5])
+  const volume: MotionValue<number> = useSpring(1, {
+    bounce: 0,
+    duration: 8000,
+  })
 
   const sliderWidth = useTransform(volume, [0, 1], [0, 100])
   const sliderHeight = useTransform(volume, [0, 0.1], [60, 100])
@@ -29,11 +44,8 @@ function App() {
   const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
   useMotionValueEvent(volume, 'change', latest => {
-    latest
-  })
-
-  useMotionValueEvent(playbackRate, 'change', latest => {
-    latest
+    sounds.play(latest < 0.3 ? 'slow' : latest > 0.7 ? 'fast' : 'mid')
+    sounds.volume(latest)
   })
 
   const handleMotion = useCallback((event: DeviceMotionEvent) => {
@@ -62,16 +74,18 @@ function App() {
             ></motion.div>
           </div>
 
-          <ReactHowler
-            src="/coffee-bean-sound.mp3"
-            playing={isPlaying}
-            loop
-            volume={1}
-            ref={howlerRef}
-          />
-
           <div className="mt-4 flex items-center justify-center">
-            <button onClick={() => setIsPlaying(!isPlaying)}>Play</button>
+            <button
+              onClick={() => {
+                if (sounds.isPlaying()) {
+                  sounds.pause()
+                } else {
+                  sounds.play('fast')
+                }
+              }}
+            >
+              Play
+            </button>
             <button
               className="border p-3"
               onClick={() => {
