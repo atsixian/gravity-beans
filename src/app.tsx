@@ -125,31 +125,26 @@ function App() {
 
           <VolumeBar drag={!isMobile} gravityVolume={gravityVolume} />
 
-          {!isMobile && (
+          {status === 'granted' && (
             <>
               <p className="flex items-center gap-1 text-sm">
                 <IconHearing className="h-5 w-5" />
                 Unmute for a surprise
               </p>
-              <p className="mt-2 text-center text-sm">
-                Looks like you&apos;re on a desktop. <br />
-                Try it on a phone or tablet to see gravity in action.
-                <br />
-                For now, try dragging it👀
-              </p>
-            </>
-          )}
 
-          {isMobile && status === 'granted' && (
-            <>
-              <p className="flex items-center gap-1 text-sm">
-                <IconHearing className="h-5 w-5" />
-                Unmute for a surprise
-              </p>
-              <p className="flex items-center gap-1 text-sm">
-                <IconPhoneRotate className="h-5 w-5" />
-                Tilt to pour coffee beans
-              </p>
+              {isMobile ? (
+                <p className="flex items-center gap-1 text-sm">
+                  <IconPhoneRotate className="h-5 w-5" />
+                  Tilt to pour coffee beans
+                </p>
+              ) : (
+                <p className="text-center text-sm">
+                  Looks like you&apos;re on a desktop. <br />
+                  Try it on a phone or tablet to see gravity in action.
+                  <br />
+                  For now, try dragging it👀
+                </p>
+              )}
             </>
           )}
         </div>
