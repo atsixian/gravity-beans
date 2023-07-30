@@ -1,79 +1,20 @@
-![reactjs-vite-tailwindcss-boilerplate](https://user-images.githubusercontent.com/16243531/217138979-b854309c-4742-4275-a705-f9fec5158217.jpg)
+![gravity-beans](./public/og.png)
 
-# React Tailwindcss Boilerplate build with Vite
+# Gravity Beans
 
-This is a boilerplate build with Vite, React 18, TypeScript, Vitest, Testing Library, TailwindCSS 3, Eslint and Prettier.
+Tilt to pour coffee beans. Volume controlled by gravity.
 
-## What is inside?
+## Why
 
-This project uses many tools like:
+Inspired by [Physics Engine Volume Slider](https://www.reddit.com/r/ProgrammerHumor/comments/6fcbrb/physics_engine_volume_slider/). I thought integrating **real** gravity into it would be cool, so here you go.
 
-- [Vite](https://vitejs.dev)
-- [ReactJS](https://reactjs.org)
-- [TypeScript](https://www.typescriptlang.org)
-- [Vitest](https://vitest.dev)
-- [Testing Library](https://testing-library.com)
-- [Tailwindcss](https://tailwindcss.com)
-- [Eslint](https://eslint.org)
-- [Prettier](https://prettier.io)
+## How it works
 
-## Getting Started
+- Motion data: [ `devicemotion` ](https://developer.mozilla.org/en-US/docs/Web/API/Window/devicemotion_event)
+- Sound: [Howler.js](https://howlerjs.com/)
+- Gesture: [Framer Motion](https://www.framer.com/motion/)
 
-### Install
-
-Create the project.
-
-```bash
-npx degit joaopaulomoraes/reactjs-vite-tailwindcss-boilerplate my-app
-```
-
-Access the project directory.
-
-```bash
-cd my-app
-```
-
-Install dependencies.
-
-```bash
-pnpm install
-```
-
-Serve with hot reload at <http://localhost:5173>.
-
-```bash
-pnpm run dev
-```
-
-### Lint
-
-```bash
-pnpm run lint
-```
-
-### Typecheck
-
-```bash
-pnpm run typecheck
-```
-
-### Build
-
-```bash
-pnpm run build
-```
-
-### Test
-
-```bash
-pnpm run test
-```
-
-View and interact with your tests via UI.
-
-```bash
-pnpm run test:ui
-```
+Check out the [hooks](./src/hooks).
 
 ## License
 
