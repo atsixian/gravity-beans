@@ -15,7 +15,6 @@ import { useSoundSwitcher } from 'hooks/use-sound-switcher'
 import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
-import { IconVolumeDown, IconVolumeUp } from 'icon-volume'
 import { useState } from 'react'
 
 function App() {
@@ -126,46 +125,32 @@ function App() {
 
           <VolumeBar drag={!isMobile} gravityVolume={gravityVolume} />
 
-          {false && status === 'granted' && (
-            <p className="flex items-center gap-1 text-sm">
-              <IconHearing className="h-5 w-5" />
-              Unmute for a surprise
-            </p>
-          )}
-          {false && isMobile && status === 'granted' && (
-            <p className="flex items-center gap-1 text-sm">
-              <IconPhoneRotate className="h-5 w-5" />
-              Tilt to pour some coffee beans
-            </p>
-          )}
-
-          {false && !isMobile && (
-            <div>
-              <div className="mt-4 flex items-center justify-center">
-                <button
-                  className="border p-2"
-                  onClick={() => {
-                    gravityVolume.setGravity(-2)
-                  }}
-                >
-                  <IconVolumeDown className="w-6" aria-label="volume down" />
-                </button>
-                <button
-                  className="border p-2"
-                  onClick={() => {
-                    gravityVolume.setGravity(2)
-                  }}
-                >
-                  <IconVolumeUp className="w-6" aria-label="volume up" />
-                </button>
-              </div>
+          {!isMobile && (
+            <>
+              <p className="flex items-center gap-1 text-sm">
+                <IconHearing className="h-5 w-5" />
+                Unmute for a surprise
+              </p>
               <p className="mt-2 text-center text-sm">
                 Looks like you&apos;re on a desktop. <br />
-                Try running it on a phone or tablet to see gravity in action.
+                Try it on a phone or tablet to see gravity in action.
                 <br />
-                But you can still play with the volume button👀
+                For now, try dragging it👀
               </p>
-            </div>
+            </>
+          )}
+
+          {isMobile && status === 'granted' && (
+            <>
+              <p className="flex items-center gap-1 text-sm">
+                <IconHearing className="h-5 w-5" />
+                Unmute for a surprise
+              </p>
+              <p className="flex items-center gap-1 text-sm">
+                <IconPhoneRotate className="h-5 w-5" />
+                Tilt to pour coffee beans
+              </p>
+            </>
           )}
         </div>
 
