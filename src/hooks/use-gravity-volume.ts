@@ -1,4 +1,4 @@
-import { MotionValue, useMotionValue, useMotionValueEvent } from 'framer-motion'
+import { MotionValue, useMotionValue, useMotionValueEvent, useSpring } from 'framer-motion'
 import { UseStoppableTime } from './use-stoppable-time'
 
 type UseGravityVolume = {
@@ -9,7 +9,7 @@ type UseGravityVolume = {
 
 export function useGravityVolume(t: UseStoppableTime, initialVolume: number): UseGravityVolume {
   const v = useMotionValue(0)
-  const g = useMotionValue(0)
+  const g = useSpring(0)
 
   const volume = useMotionValue(initialVolume)
 
