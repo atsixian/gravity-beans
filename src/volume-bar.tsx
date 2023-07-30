@@ -57,7 +57,7 @@ export function DraggableBar({
 
   return (
     <motion.div
-      className={props.className}
+      className={`${props.className} cursor-grab active:cursor-grabbing`}
       ref={barRef}
       style={{ rotateZ: useMotionTemplate`${clampedRotationAngle}rad` }}
       drag
