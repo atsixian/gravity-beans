@@ -1,4 +1,5 @@
 import {
+  clamp,
   MotionValue,
   useMotionValue,
   useMotionValueEvent,
@@ -25,16 +26,18 @@ export function useGravityVolume(
     const dt = 1 / 150
     const oldV = v.get()
     const newV = oldV + g.get() * dt
-    const vol = volume.get() + ((oldV + newV) / 2) * dt
-    v.set(newV)
-    volume.set(Math.max(0, Math.min(1, vol)))
-  })
+    const oldVolume = volume.get()
 
-  useMotionValueEvent(volume, 'change', vol => {
-    // reset time and velocity when volume animation ends
-    if (vol <= 0 || vol >= 1) {
+    const vol = clamp(0, 1, oldVolume + ((oldV + newV) / 2) * dt)
+
+    // stop increasing/decreasing velocity when it clamps at two ends
+    if (vol === 0 || vol === 1) {
       resetVelocity()
+    } else {
+      v.set(newV)
     }
+
+    volume.set(vol)
   })
 
   const setGravity = (val: number) => {
