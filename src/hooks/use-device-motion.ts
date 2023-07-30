@@ -1,9 +1,7 @@
 import { useCallback } from 'react'
 
 // for iOS 13+
-export type MotionPermissionStatus =
-  | 'granted'
-  | 'denied'
+export type MotionPermissionStatus = 'granted' | 'denied'
 
 export interface DeviceMotionEventiOS extends DeviceMotionEvent {
   requestPermission?: () => Promise<MotionPermissionStatus>
@@ -26,6 +24,10 @@ export function useDeviceMotion({
   const onChangeCb = useCallback(onChange, [])
 
   const requestPermission = async () => {
+    if (!window.DeviceMotionEvent) {
+      return 'granted'
+    }
+
     let status: MotionPermissionStatus = 'granted'
 
     const request = (DeviceMotionEvent as unknown as DeviceMotionEventiOS)
