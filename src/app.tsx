@@ -92,36 +92,40 @@ function App() {
         ></motion.div>
 
         <div className="mt-auto flex flex-col items-center gap-2">
-          <motion.button
-            layout
-            className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
-            onClick={async () => {
-              if (sounds.isPlaying) {
-                t.stop()
-                sounds.pause()
-                gravityVolume.resetVelocity()
-                stopUpdatingDeviceMotion()
-              } else if (!sounds.current()) {
-                // first time
-                const res = await requestPermission()
-                setStatus(res)
-                if (res === 'granted') {
+          {sounds.isLoaded ? (
+            <motion.button
+              layout
+              className="flex gap-2 rounded-full border border-stone-300 bg-stone-500 px-3 py-2"
+              onClick={async () => {
+                if (sounds.isPlaying) {
+                  t.stop()
+                  sounds.pause()
+                  gravityVolume.resetVelocity()
+                  stopUpdatingDeviceMotion()
+                } else if (!sounds.current()) {
+                  // first time
+                  const res = await requestPermission()
+                  setStatus(res)
+                  if (res === 'granted') {
+                    handleMotionStart()
+                  }
+                } else {
                   handleMotionStart()
                 }
-              } else {
-                handleMotionStart()
-              }
-            }}
-          >
-            <motion.span
-              key={sounds.isPlaying ? 'Pause' : 'Play'}
-              initial={{ y: -30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: 30, opacity: 0 }}
+              }}
             >
-              {sounds.isPlaying ? 'Pause' : 'Play'}
-            </motion.span>
-          </motion.button>
+              <motion.span
+                key={sounds.isPlaying ? 'Pause' : 'Play'}
+                initial={{ y: -30, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 30, opacity: 0 }}
+              >
+                {sounds.isPlaying ? 'Pause' : 'Play'}
+              </motion.span>
+            </motion.button>
+          ) : (
+            <p>Loading sound...</p>
+          )}
 
           <VolumeBar drag={!isMobile} gravityVolume={gravityVolume} />
 

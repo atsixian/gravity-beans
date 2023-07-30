@@ -16,12 +16,24 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
   const howls = useRef<Howls<T>>({} as Howls<T>)
   const [isPlaying, setIsPlaying] = useState(false)
 
+  const [isLoaded, setIsLoaded] = useState(false)
+
+  const loadedCount = useRef(0)
+
   useEffect(() => {
-    Object.entries(sounds).forEach(
-      ([soundName, options]: [SoundName, HowlOptions]) => {
-        howls.current[soundName] = new Howl(options)
-      }
-    )
+    const soundArray = Object.entries(sounds)
+
+    soundArray.forEach(([soundName, options]: [SoundName, HowlOptions]) => {
+      howls.current[soundName] = new Howl({
+        ...options,
+        onload: () => {
+          loadedCount.current += 1
+          if (loadedCount.current === soundArray.length) {
+            setIsLoaded(true)
+          }
+        },
+      })
+    })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
@@ -66,5 +78,5 @@ export function useSoundSwitcher<T extends Record<string, HowlOptions>>(
     return currentSound.current
   }
 
-  return { play, pause, stop, get, current, volume, isPlaying }
+  return { play, pause, stop, get, current, volume, isPlaying, isLoaded }
 }

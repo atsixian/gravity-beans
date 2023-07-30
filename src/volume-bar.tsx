@@ -48,7 +48,7 @@ export function DraggableBar({
   })
 
   useMotionValueEvent(clampedRotationAngle, 'change', rad => {
-    gravityVolume.setGravity(rad > 0 ? 1 : -1)
+    gravityVolume.setGravity(rad > 0 ? 2 : -2)
   })
 
   const barRef = useRef<HTMLDivElement & { centerX: number; centerY: number }>(
