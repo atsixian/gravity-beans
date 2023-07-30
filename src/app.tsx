@@ -1,7 +1,7 @@
+import { VolumeBar } from 'volume-bar'
 import {
   motion,
   useMotionTemplate,
-  useMotionValue,
   useMotionValueEvent,
   useTransform,
 } from 'framer-motion'
@@ -16,7 +16,7 @@ import { useStoppableTime } from 'hooks/use-stoppable-time'
 import IconHearing from 'icon-hearing'
 import IconPhoneRotate from 'icon-phone-rotate'
 import { IconVolumeDown, IconVolumeUp } from 'icon-volume'
-import { useRef, useState } from 'react'
+import { useState } from 'react'
 
 function App() {
   const initialVolume = 0.5
@@ -39,14 +39,10 @@ function App() {
     },
   })
 
-  const barRef = useRef<HTMLDivElement | null>(null)
-
   const t = useStoppableTime()
   const gravityVolume = useGravityVolume(t, initialVolume)
   const volume = gravityVolume.volume
 
-  const sliderWidth = useTransform(volume, [0, 1], [0, 100])
-  const sliderHeight = useTransform(volume, [0, 0.1], [60, 100])
   const gradientRadius = useTransform(volume, [0, 1], [20, 100])
   const gradientOpacity = useTransform(volume, [0, 1], [0.2, 0])
 
@@ -56,8 +52,6 @@ function App() {
     /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
       navigator.userAgent
     )
-
-  const rotateAngle = useMotionValue(0)
 
   useMotionValueEvent(volume, 'change', latest => {
     if (sounds.isPlaying) {
@@ -130,56 +124,22 @@ function App() {
             </motion.span>
           </motion.button>
 
-          {/* Bar */}
-          <motion.div
-            ref={barRef}
-            style={{ rotateZ: useMotionTemplate`${rotateAngle}rad` }}
-            drag
-            dragConstraints={{ left: 0, right: 0, top: 0, bottom: 0 }}
-            dragElastic={0}
-            dragMomentum={false}
-            onDrag={(e, info) => {
-              if (!barRef.current) return
-              const box = barRef.current.getBoundingClientRect()
-              const centerX = (box.left + box.right) / 2
-              const centerY = (box.top + box.bottom) / 2
+          <VolumeBar drag={!isMobile} gravityVolume={gravityVolume} />
 
-              const initialDragX = info.point.x - info.offset.x
-
-              const isLeftEnd = initialDragX < centerX
-
-              const angle = Math.atan2(
-                info.point.y - centerY,
-                info.point.x - centerX
-              )
-
-              rotateAngle.set(isLeftEnd ? angle - Math.PI : angle)
-            }}
-            className="relative flex h-11 w-80 items-center justify-start overflow-hidden rounded-full bg-stone-400 p-1"
-          >
-            <motion.div
-              className="h-full w-full overflow-hidden rounded-full bg-stone-800"
-              style={{
-                width: useMotionTemplate`${sliderWidth}%`,
-                height: useMotionTemplate`${sliderHeight}%`,
-              }}
-            ></motion.div>
-          </motion.div>
-
-          {status === 'granted' && (
+          {false && status === 'granted' && (
             <p className="flex items-center gap-1 text-sm">
               <IconHearing className="h-5 w-5" />
               Unmute for a surprise
             </p>
           )}
-          {isMobile && status === 'granted' && (
+          {false && isMobile && status === 'granted' && (
             <p className="flex items-center gap-1 text-sm">
               <IconPhoneRotate className="h-5 w-5" />
               Tilt to pour some coffee beans
             </p>
           )}
 
-          {!isMobile && (
+          {false && !isMobile && (
             <div>
               <div className="mt-4 flex items-center justify-center">
                 <button
