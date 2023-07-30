@@ -155,6 +155,10 @@ function App() {
             Made by <a href="https://twitter.com/noworkforsixian">Sixian</a>
           </p>
           <p>
+            <a href="https://www.buymeacoffee.com/sixianli">Buy me a coffee</a>,
+            with your beans🤎
+          </p>
+          <p className="!mt-3">
             Photo by{' '}
             <a href="https://unsplash.com/@lazares?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
               Lazarescu Alexandra
@@ -162,6 +166,13 @@ function App() {
             on{' '}
             <a href="https://unsplash.com/photos/AZJrf0D6Vvo?utm_source=unsplash&utm_medium=referral&utm_content=creditCopyText">
               Unsplash
+            </a>
+          </p>
+          <p>
+            <a href="https://github.com/atsixian/gravity-beans">GitHub</a>
+            {' · '}
+            <a href="https://twitter.com/share?text=Tilt to pour some coffee beans. Volume controlled by gravity. @noworkforsixian&url=https://gravity-beans.sixian.li">
+              Share to Twitter
             </a>
           </p>
         </div>
