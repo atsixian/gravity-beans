@@ -73,8 +73,10 @@ export function DraggableBar({
         barRef.current.centerX = centerX
         barRef.current.centerY = centerY
       }}
-      onDrag={(_e, info) => {
-        if (!barRef.current) return
+      onDrag={(e, info) => {
+        if (!barRef.current || !barRef.current.contains(e.target as Node)) {
+          return
+        }
 
         const angle = Math.atan(
           (info.point.y - barRef.current.centerY) /

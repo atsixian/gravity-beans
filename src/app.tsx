@@ -156,7 +156,10 @@ function App() {
         <div className="prose prose-invert mb-4 mt-auto text-center [text-shadow:0_2px_40px_#000] prose-p:m-0 prose-p:text-sm prose-p:text-white">
           <h1 className="mb-3 text-2xl md:text-3xl">Gravity Beans</h1>
           <p>
-            Made by <a href="https://twitter.com/noworkforsixian/status/1685622298118963200?s=20">Sixian</a>
+            Made by{' '}
+            <a href="https://twitter.com/noworkforsixian/status/1685622298118963200?s=20">
+              Sixian
+            </a>
           </p>
           <p>
             <a href="https://www.buymeacoffee.com/sixianli">Buy me a coffee</a>,
